@@ -1,133 +1,169 @@
 :root {
-    --bg: #f8f9fa;
+    --bg: #f8fafb;
+    --text: #111827;
+    --muted: #6b7280;
     --card: #ffffff;
-    --text: #222;
-    --muted: #6c757d;
-    --primary: #0d6efd;
-    --primary-contrast: #fff;
-    --accent: #6c757d;
-    --shadow: 0 6px 18px rgba(31, 41, 55, 0.06);
-    --radius: 12px;
+    --input-bg: #ffffff;
+    --input-text: #111827;
+    --input-border: rgba(17, 24, 39, 0.08);
+    --accent: linear-gradient(90deg, #1d4ed8, #3b82f6);
 }
 
-
-/* dark theme variables */
-
-.dark-theme {
+.dark-theme,
+.dark-mode {
     --bg: #0f1724;
+    --text: #e6eef6;
+    --muted: rgba(230, 238, 246, 0.55);
     --card: #0b1220;
-    --text: #e6eef8;
-    --muted: #94a3b8;
-    --primary: #3b82f6;
-    --primary-contrast: #07203a;
-    --accent: #475569;
-    --shadow: 0 8px 24px rgba(2, 6, 23, 0.6);
+    --input-bg: #0f1724;
+    --input-text: #ffffff;
+    --input-border: rgba(255, 255, 255, 0.06);
+    --accent: linear-gradient(90deg, #1e3a8a, #2563eb);
 }
 
 
-/* --------------- Page + smooth transitions --------------- */
+/* page background & base text */
 
-html,
 body {
-    height: 100%;
     background: var(--bg);
     color: var(--text);
-    transition: background .35s ease, color .35s ease;
-    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    transition: background-color .18s ease, color .18s ease;
 }
 
 
-/* container tweaks to look cleaner with cards */
+/* cards and forms */
 
-.container {
-    max-width: 1100px;
-}
-
-
-/* --------------- Cards --------------- */
-
-.card {
+.card,
+.card-body {
     background: var(--card);
-    border: none;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    transition: transform .18s ease, box-shadow .18s ease;
+    color: var(--text);
+    transition: background-color .18s ease, color .18s ease;
 }
 
 
-/* subtle hover lift */
+/* inputs, selects, textareas */
 
-.card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 28px rgba(10, 22, 50, 0.12);
+.form-control,
+input,
+textarea,
+select {
+    background: var(--input-bg);
+    color: var(--input-text);
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    padding: .6rem .75rem;
+    transition: background-color .18s ease, color .18s ease, border-color .18s ease;
+    -webkit-text-fill-color: var(--input-text);
 }
 
 
-/* --------------- Buttons --------------- */
+/* placeholder default */
 
-.btn {
-    border-radius: 10px;
-    transition: transform .12s ease, box-shadow .12s ease;
-    position: relative;
-    overflow: hidden;
-    /* for ripple */
-    -webkit-tap-highlight-color: transparent;
-}
-
-.btn:active {
-    transform: translateY(1px) scale(.998);
+.form-control::placeholder,
+input::placeholder,
+textarea::placeholder {
+    color: var(--muted);
+    opacity: 1;
 }
 
 
-/* primary solid style with custom color */
+/* stronger placeholder for dark theme/class */
+
+.dark-theme .form-control::placeholder,
+.dark-theme input::placeholder,
+.dark-theme textarea::placeholder,
+.dark-mode .form-control::placeholder,
+.dark-mode input::placeholder,
+.dark-mode textarea::placeholder {
+    color: rgba(230, 238, 246, 0.55) !important;
+}
+
+
+/* focus state */
+
+.form-control:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: rgba(37, 99, 235, 0.85);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.08);
+}
+
+
+/* autofill override for WebKit browsers (Chrome, Edge, Brave, Safari) */
+
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill,
+input:-webkit-autofill:hover,
+textarea:-webkit-autofill:hover,
+select:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+    -webkit-text-fill-color: var(--input-text) !important;
+    transition: background-color 9999s ease-in-out 0s !important;
+}
+
+
+/* Firefox autofill */
+
+input:-moz-autofill,
+textarea:-moz-autofill,
+select:-moz-autofill {
+    box-shadow: 0 0 0px 1000px var(--input-bg) inset !important;
+    -moz-text-fill-color: var(--input-text) !important;
+}
+
+
+/* ensure autofill border uses our variable */
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+    border-color: var(--input-border) !important;
+}
+
+
+/* Buttons: keep accent gradient consistent */
 
 .btn-primary {
-    background: linear-gradient(180deg, var(--primary), color-mix(in srgb, var(--primary) 85%, black 10%));
-    color: var(--primary-contrast);
+    background: var(--accent);
     border: none;
-    box-shadow: 0 6px 18px rgba(13, 110, 253, 0.12);
+    color: white;
 }
 
 
-/* small, subtle outline */
+/* small helper to keep contrast on disabled/filled fields */
 
-.btn-outline-primary {
-    color: var(--primary);
-    border: 1px solid rgba(13, 110, 253, 0.12);
-    background: transparent;
+.form-control[disabled],
+.form-control:disabled {
+    background: var(--input-bg);
+    color: var(--input-text);
 }
 
 
-/* a small utility for muted text */
-
-.muted {
-    color: var(--muted);
-}
-
-
-/* --------------- Header badge small style --------------- */
-
-.badge-notify {
-    border-radius: 999px;
-    padding: .25rem .5rem;
-    font-size: .8rem;
-}
-
-
-/* --------------- Ripple effect element --------------- */
+/* ripple style used by js */
 
 .ripple {
     position: absolute;
     border-radius: 50%;
     transform: scale(0);
-    animation: ripple-anim 600ms linear;
-    background: rgba(255, 255, 255, 0.45);
+    animation: ripple 700ms linear;
     pointer-events: none;
+    opacity: .18;
+    background: rgba(0, 0, 0, 0.12);
 }
 
-@keyframes ripple-anim {
+.dark-theme .ripple,
+.dark-mode .ripple {
+    background: rgba(255, 255, 255, 0.08);
+    opacity: .12;
+}
+
+@keyframes ripple {
     to {
         transform: scale(4);
         opacity: 0;
@@ -135,59 +171,118 @@ body {
 }
 
 
-/* darker ripple color when in dark theme */
+/* three-dot menu (visible & theme-aware) */
 
-.dark-theme .ripple {
-    background: rgba(255, 255, 255, 0.08);
+.menu {
+    position: relative;
+    display: inline-block;
 }
 
 
-/* --------------- Inputs & textareas --------------- */
+/* button style: rounded small square */
 
-input.form-control,
-textarea.form-control,
-select.form-select {
-    border-radius: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    background: transparent;
-    transition: box-shadow .15s ease, border-color .15s ease;
+.menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    background: rgba(0, 0, 0, 0.03);
+    color: var(--text);
+    font-size: 18px;
+    line-height: 1;
+    padding: 0;
+    cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease, transform .08s ease;
 }
 
-.dark-theme input.form-control,
-.dark-theme textarea.form-control,
-.dark-theme select.form-select {
+
+/* hover/focus effects */
+
+.menu-btn:hover,
+.menu-btn:focus {
+    background: rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
+    outline: none;
+    box-shadow: 0 6px 14px rgba(2, 6, 23, 0.06);
+}
+
+
+/* pressed */
+
+.menu-btn:active {
+    transform: translateY(0);
+}
+
+
+/* menu-items panel slight spacing */
+
+.menu-items {
+    min-width: 150px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+
+/* DARK THEME - invert colors for contrast */
+
+.dark-theme .menu-btn,
+.dark-mode .menu-btn {
+    border-color: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--input-text);
+    box-shadow: none;
+}
+
+.dark-theme .menu-btn:hover,
+.dark-mode .menu-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+
+/* make menu-items match theme nicely */
+
+.menu-items {
+    background: var(--card);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dark-theme .menu-items,
+.dark-mode .menu-items {
+    background: var(--card);
     border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 
-/* focus */
+/* ensure anchor items have padding and hover contrast */
 
-input.form-control:focus,
-textarea.form-control:focus {
-    box-shadow: 0 6px 18px rgba(13, 110, 253, 0.06);
-    border-color: var(--primary);
-    outline: none;
+.menu-items a {
+    padding: 8px 12px;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.menu-items a:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.dark-theme .menu-items a:hover,
+.dark-mode .menu-items a:hover {
+    background: rgba(255, 255, 255, 0.03);
 }
 
 
-/* --------------- Small utilities --------------- */
+/* small responsive tweak */
 
-.top-controls {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-
-/* responsive tweaks */
-
-@media (max-width:576px) {
-    .container {
-        padding-left: 12px;
-        padding-right: 12px;
-    }
-    .top-controls {
-        flex-wrap: wrap;
-        gap: .4rem;
+@media (max-width: 480px) {
+    .menu-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+        border-radius: 6px;
     }
 }

@@ -7,10 +7,16 @@ if (!isset($_SESSION['admin_id'])) {
 }
 $pending_alumni_count = 0;
 $pending_posts_count = 0;
+$notif_count = 0;
+
 $r1 = mysqli_query($conn, "SELECT COUNT(*) as c FROM alumni WHERE approved=0");
 if ($r1) { $pending_alumni_count = intval(mysqli_fetch_assoc($r1)['c']); }
+
 $r2 = mysqli_query($conn, "SELECT COUNT(*) as c FROM posts WHERE approved=0");
 if ($r2) { $pending_posts_count = intval(mysqli_fetch_assoc($r2)['c']); }
+
+$r3 = mysqli_query($conn, "SELECT COUNT(*) as c FROM notifications WHERE seen=0");
+if ($r3) { $notif_count = intval(mysqli_fetch_assoc($r3)['c']); }
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,6 +36,17 @@ if ($r2) { $pending_posts_count = intval(mysqli_fetch_assoc($r2)['c']); }
         font-size: .8rem;
         margin-left: 6px;
     }
+
+    .top-controls .notif-btn {
+        position: relative;
+    }
+
+    .top-controls .notif-badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        font-size: .65rem;
+    }
     </style>
 </head>
 
@@ -37,7 +54,13 @@ if ($r2) { $pending_posts_count = intval(mysqli_fetch_assoc($r2)['c']); }
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center">
             <h2>Admin Dashboard</h2>
-            <div class="top-controls">
+            <div class="top-controls d-flex align-items-center gap-2">
+                <a href="notifications.php" class="btn btn-sm btn-outline-warning notif-btn">
+                    Reports
+                    <?php if($notif_count>0): ?>
+                    <span class="badge bg-danger notif-badge"><?= $notif_count ?></span>
+                    <?php endif; ?>
+                </a>
                 <a href="dashboard.php" class="btn btn-sm btn-outline-secondary">Refresh</a>
                 <a href="approve_alumni.php?action=logout" class="btn btn-sm btn-danger">Logout</a>
                 <button id="themeToggle" class="btn btn-sm btn-outline-primary">Dark</button>
@@ -45,7 +68,7 @@ if ($r2) { $pending_posts_count = intval(mysqli_fetch_assoc($r2)['c']); }
         </div>
 
         <div class="row mt-4 g-3">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <a class="card-link" href="pending_alumni.php">
                     <div class="card shadow-sm p-3">
                         <div class="d-flex justify-content-between align-items-center">
@@ -65,7 +88,7 @@ if ($r2) { $pending_posts_count = intval(mysqli_fetch_assoc($r2)['c']); }
                 </a>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <a class="card-link" href="pending_posts.php">
                     <div class="card shadow-sm p-3">
                         <div class="d-flex justify-content-between align-items-center">
@@ -85,7 +108,7 @@ if ($r2) { $pending_posts_count = intval(mysqli_fetch_assoc($r2)['c']); }
                 </a>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <a class="card-link" href="manage_posts.php">
                     <div class="card shadow-sm p-3">
                         <div class="d-flex justify-content-between align-items-center">
@@ -100,11 +123,32 @@ if ($r2) { $pending_posts_count = intval(mysqli_fetch_assoc($r2)['c']); }
                     </div>
                 </a>
             </div>
+
+            <div class="col-md-3">
+                <a class="card-link" href="notifications.php">
+                    <div class="card shadow-sm p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1">Reports</h5>
+                                <small class="text-muted">User reports for admin review</small>
+                            </div>
+                            <div>
+                                <?php if($notif_count > 0): ?>
+                                <span class="badge bg-danger badge-notify"><?= $notif_count ?></span>
+                                <?php else: ?>
+                                <span class="badge bg-secondary badge-notify">0</span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
         </div>
 
         <hr class="mt-4">
-        <p class="text-muted small">Use the tiles above to manage registrations and posts. Click a tile to open the
-            corresponding list and take action.</p>
+        <p class="text-muted small">Use the tiles above to manage registrations, posts and reports. Click a tile to open
+            the corresponding list and take action.</p>
     </div>
 
     <script src="../js/app.js"></script>

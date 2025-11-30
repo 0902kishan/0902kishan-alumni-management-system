@@ -53,6 +53,32 @@ $res = mysqli_query($conn, "SELECT p.id, p.title, p.body, p.approved, p.created_
 
                 <p class="mt-2"><?= nl2br(htmlspecialchars($p['body'])) ?></p>
 
+                <?php
+                        $post_id = intval($p['id']);
+                        $comment_q = "SELECT c.id, c.content, c.created_at, a.name
+                                      FROM comments c LEFT JOIN alumni a ON c.alumni_id = a.id
+                                      WHERE c.post_id = $post_id
+                                      ORDER BY c.created_at ASC";
+                        $comment_res = mysqli_query($conn, $comment_q);
+                        ?>
+                <hr>
+                <h6 class="mb-2">Comments (<?= $comment_res ? mysqli_num_rows($comment_res) : 0 ?>)</h6>
+                <div>
+                    <?php if ($comment_res && mysqli_num_rows($comment_res) > 0): ?>
+                    <?php while($com = mysqli_fetch_assoc($comment_res)): ?>
+                    <div class="mb-2">
+                        <strong><?= htmlspecialchars($com['name'] ?? 'Alumni') ?></strong>
+                        <small class="text-muted"> — <?= htmlspecialchars($com['created_at']) ?></small>
+                        <p class="mb-1"><?= nl2br(htmlspecialchars($com['content'])) ?></p>
+                        <a href="delete_comment.php?id=<?= intval($com['id']) ?>"
+                            class="btn btn-sm btn-outline-danger">Delete</a>
+                    </div>
+                    <?php endwhile; ?>
+                    <?php else: ?>
+                    <div class="text-muted mb-2">No comments.</div>
+                    <?php endif; ?>
+                </div>
+
                 <div class="mt-2">
                     <?php if($p['approved']==0): ?>
                     <a href="approve_post.php?id=<?= intval($p['id']) ?>&act=approve"
